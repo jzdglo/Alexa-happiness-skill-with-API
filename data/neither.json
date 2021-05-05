@@ -1,0 +1,31 @@
+{
+  "textListData": {
+    "headerTitle": "Why not try yoga?",
+    "backgroundImageSource": "https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2100&q=80",
+    "listItemsToShow": [
+      {
+        "primaryText": "Watch the yoga video.",
+        "secondaryText": "Say \"yes\" to start watching.",
+        "secondaryTextPosition": "bottom",
+        "hideOrdinal": true,
+        "touchForward": true,
+        "primaryAction": {
+          "type": "SendEvent",
+          "arguments": [
+            "PlayVideoButton"
+          ]
+        }
+      },
+      {
+        "primaryText": "Learn other suggestions.",
+        "secondaryText": "Or, say \"other suggestions\" to learn another suggestion.",
+        "primaryAction": {
+          "type": "SendEvent",
+          "arguments": [
+            "OtherSuggestionButton"
+          ]
+        }
+      }
+    ]
+  }
+}

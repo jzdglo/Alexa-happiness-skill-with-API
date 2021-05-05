@@ -1,0 +1,49 @@
+{
+  "type": "APL",
+  "version": "1.6",
+  "theme": "light",
+  "import": [
+    {
+      "name": "alexa-layouts",
+      "version": "1.3.0"
+    }
+  ],
+  "mainTemplate": {
+    "parameters": [
+      "textListData"
+    ],
+    "items": [
+      {
+        "type": "AlexaTextList",
+        "theme": "light",
+        "theme": "${viewport.theme}",
+        "headerTitle": "${textListData.headerTitle}",
+        "headerDivider": true,
+        "headerBackButton": true,
+        "headerBackButtonAccessibilityLabel": "back",
+        "headerBackgroundColor": "transparent",
+        "headerBackButtonCommand": {
+          "type": "SendEvent",
+          "arguments": [
+            "goBack"
+          ]
+        },
+        "backgroundColor": "transparent",
+        "theme": "light",
+        "backgroundImageSource": "${textListData.backgroundImageSource}",
+        "backgroundScale": "best-fill",
+        "backgroundAlign": "center",
+        "backgroundBlur": false,
+        "hideOrdinal": false,
+        "primaryAction": {
+          "type": "SendEvent",
+          "arguments": [
+            "ListItemSelected",
+            "${ordinal}"
+          ]
+        },
+        "listItems": "${textListData.listItemsToShow}"
+      }
+    ]
+  }
+}

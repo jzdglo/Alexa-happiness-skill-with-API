@@ -1,0 +1,41 @@
+{
+  "type": "APL",
+  "version": "1.6",
+  "theme": "light",
+  "import": [
+    {
+      "name": "alexa-layouts",
+      "version": "1.3.0"
+    }
+  ],
+  "mainTemplate": {
+    "parameters": [
+      "alexaDetailData"
+    ],
+    "items": [
+      {
+        "type": "AlexaDetail",
+        "theme": "light",
+        "id": "happyId",
+        "backgroundImageSource": "${alexaDetailData.backgroundImage}",
+        "detailType": "generic",
+        "detailImageAlignment": "left",
+        "headerTitle": "${alexaDetailData.title}",
+        "imageBlurredBackground": true,
+        "imageAspectRatio": "square",
+        "imageSource": "${alexaDetailData.detailImage}",
+        "bodyText": "${alexaDetailData.textContent.bodyText}",
+        "primaryText": "${alexaDetailData.primaryText}",
+        "secondaryText": "${alexaDetailData.secondaryText}", 
+        "headerBackButton": true,
+        "headerBackButtonAccessibilityLabel": "back",
+        "headerBackButtonCommand": {
+          "type":"SendEvent",
+          "arguments":[
+            "goBack"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "imageListData": {
+    "listItemsToShow": [
+      {
+        "primaryText": "Unhappy",
+        "secondaryText": "Scale one",
+        "imageSource": "https://cdn.pixabay.com/photo/2020/12/19/02/50/emoji-5843434__480.png",
+        "imageShowProgressBar": false,
+        "primaryAction": {
+          "type": "SendEvent",
+          "arguments":[
+            "happiness_scale_one"
+          ]
+        }
+      },
+      {
+        "primaryText": "In the middle",
+        "secondaryText": "Scale two",
+        "imageSource": "https://cdn.pixabay.com/photo/2020/12/19/03/01/emoji-5843458__480.png",
+        "primaryAction": {
+          "type": "SendEvent",
+          "arguments":[
+            "happiness_scale_two"
+          ]
+        }
+      },
+      {
+        "primaryText": "Happy",
+        "secondaryText": "Scale three",
+        "imageSource": "https://cdn.pixabay.com/photo/2020/12/27/20/25/smile-5865209__480.png",
+        "primaryAction": {
+          "type": "SendEvent",
+          "arguments":[
+            "happiness_scale_three"
+          ]
+        }
+      }
+    ]
+  }
+}
