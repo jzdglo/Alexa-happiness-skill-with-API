@@ -16,13 +16,6 @@ const trySomething = require('./template/trysomething.json');
 const trySomething_data = require('./data/trysomething.json');
 const Alexa = require('ask-sdk-core');
 
-// const messages = {
-//   NOTIFY_MISSING_PERMISSIONS: 'Please enable profile permissions in the Amazon Alexa app.',
-//   ERROR: 'OH NO. Looks like something went wrong.'
-// };
-
-const FULL_NAME_PERMISSION = "alexa::profile:name:read";
-
 const welcomeMessage = [
   "Hello! Welcome to Your Happiness. How happy are you feeling today? ",
   "Hi! Welcome to Your Happiness! Are you feeling happy today?",
@@ -100,21 +93,33 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput) {
-  const speakOutput = `${randomChoice(welcomeMessage)} Please give a scale of one to three, where one means unhappy and three means happy.`;
-    const repromptText = 'Please give a scale of one to three to rate your happiness while one means unhappy and three means happy.';
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.lastResult = speakOutput;
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-    return handlerInput.responseBuilder
-      .speak(speakOutput)
-      .reprompt(repromptText)
-      .addDirective({
-        type: 'Alexa.Presentation.APL.RenderDocument',
-        version: '1.0',
-        document: welcome,
-        datasources: welcome_data
-      })
-      .getResponse();
+    if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
+      const speakOutput = `${randomChoice(welcomeMessage)} Please give a scale of one to three, where one means unhappy and three means happy.`;
+      const repromptText = 'Please give a scale of one to three to rate your happiness while one means unhappy and three means happy.';
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(repromptText)
+        .addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: welcome,
+          datasources: welcome_data
+        })
+        .getResponse();
+    }else{
+      const speakOutput = `${randomChoice(welcomeMessage)} Please give a scale of one to three, where one means unhappy and three means happy.`;
+      const repromptText = 'Please give a scale of one to three to rate your happiness while one means unhappy and three means happy.';
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(repromptText)
+        .getResponse();
+    }
   }
 };
 
@@ -194,40 +199,53 @@ const HappyHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'HappyIntent';
   },
   handle(handlerInput) {
-    let speakOutput = 'It is great that you feel happy! According to the Healthline, feeling joy can promote a healthier lifestyle, boost immune system, fights stress and pain, and also support longevity. I have some tips for you to stay happy, would you like to know?';
-    const repromptText = 'I have some tips for you to stay happy, would you like to know?' ;
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.lastResult = speakOutput;
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-    setQuestion(handlerInput, 'happy_tip');
-
-    return handlerInput.responseBuilder
-      .speak(speakOutput)
-      .reprompt(repromptText)
-      .addDirective({
-          type: 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: happy,
-          datasources: happy_data
-        })
-      .getResponse();
+    if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
+      let speakOutput = 'It is great that you feel happy! According to the Healthline, feeling joy can promote a healthier lifestyle, boost immune system, fights stress and pain, and also support longevity. I have some tips for you to stay happy, would you like to know?';
+      const repromptText = 'I have some tips for you to stay happy, would you like to know?' ;
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'happy_tip');
+  
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(repromptText)
+        .addDirective({
+            type: 'Alexa.Presentation.APL.RenderDocument',
+            version: '1.0',
+            document: happy,
+            datasources: happy_data
+          })
+        .getResponse();
+    }else{
+      let speakOutput = 'It is great that you feel happy! According to the Healthline, feeling joy can promote a healthier lifestyle, boost immune system, fights stress and pain, and also support longevity. I have some tips for you to stay happy, would you like to know?';
+      const repromptText = 'I have some tips for you to stay happy, would you like to know?' ;
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'happy_tip');
+        return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(repromptText)
+        .getResponse();
+    }
   },
 };
 
-const InProgresshappierIntentHandler = {
-  canHandle(handlerInput) {
-    const request = handlerInput.requestEnvelope.request;
-    return request.type === 'IntentRequest' &&
-      request.intent.name === 'othersugIntent' &&
-      request.dialogState !== 'COMPLETED';
-  },
-  handle(handlerInput) {
-    const currentIntent = handlerInput.requestEnvelope.request.intent;
-    return handlerInput.responseBuilder
-      .addDelegateDirective(currentIntent)
-      .getResponse();
-  },
-};
+// const InProgresshappierIntentHandler = {
+//   canHandle(handlerInput) {
+//     const request = handlerInput.requestEnvelope.request;
+//     return request.type === 'IntentRequest' &&
+//       request.intent.name === 'othersugIntent' &&
+//       request.dialogState !== 'COMPLETED';
+//   },
+//   handle(handlerInput) {
+//     const currentIntent = handlerInput.requestEnvelope.request.intent;
+//     return handlerInput.responseBuilder
+//       .addDelegateDirective(currentIntent)
+//       .getResponse();
+//   },
+// };
 
 const happy_tip_yes = {
   canHandle(handlerInput) {
@@ -236,22 +254,34 @@ const happy_tip_yes = {
         && handlerInput.attributesManager.getSessionAttributes().questionAsked === 'happy_tip';
   },
   handle(handlerInput) {
-    const speakOutput = randomChoice(tipNum);
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.lastResult = speakOutput;
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-    setQuestion(handlerInput, 'happy_tip');
-
-    return handlerInput.responseBuilder
-      .speak(speakOutput)
-      .reprompt(speakOutput)
-      .addDirective({
-        type: 'Alexa.Presentation.APL.RenderDocument',
-        version: '1.0',
-        document: anothersug2,
-        datasources: anothersug_data2
-      })
-      .getResponse();
+    if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
+      const speakOutput = randomChoice(tipNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'happy_tip');
+  
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: anothersug2,
+          datasources: anothersug_data2
+        })
+        .getResponse();
+    }else{
+      const speakOutput = randomChoice(tipNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'happy_tip');
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .getResponse();
+    }
   },
 };
 
@@ -266,20 +296,42 @@ const happy_tip_no = {
   },
 };
 
-// const happierIntentHandler = {
-//   canHandle(handlerInput) {
-//     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-//       && handlerInput.requestEnvelope.request.intent.name === 'happierIntent';
-//   },
-//   async handle(handlerInput) {
-//     const responseBuilder = handlerInput.responseBuilder;
-//     const methods = slotValue(handlerInput.requestEnvelope.request.intent.slots.methods);
-//     let speechText = `${methodsNum[methods]}`;
-//     return responseBuilder
-//       .speak(speechText)
-//       .getResponse();
-//   },
-// };
+const happy_tip_Handler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'othertipIntent';
+  },
+  async handle(handlerInput) {
+    if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
+      const speakOutput = randomChoice(tipNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'happy_tip');
+  
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: anothersug2,
+          datasources: anothersug_data2
+        })
+        .getResponse();
+    }else{
+      const speakOutput = randomChoice(tipNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'happy_tip');
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .getResponse();
+    }
+  },
+};
 
 const NeitherHandler = {
   canHandle(handlerInput) {
@@ -287,23 +339,35 @@ const NeitherHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'NeitherIntent';
   },
   handle(handlerInput) {
-    const speakOutput = 'NHS suggests that mindfulness can help us enjoy life more and understand ourselves better. Yoga can help with developing awareness of your breathing. If possible, you might want to hit the mat and give Yoga a try. I have a video where you can learn what to do. Would you like to watch it?';
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.lastResult = speakOutput;
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-    setQuestion(handlerInput, 'yoga_question');
-
-    return handlerInput.responseBuilder
-      .speak(speakOutput)
-      .reprompt(speakOutput)
-      .addDirective({
-          type: 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: neither,
-          datasources: neither_data
-        })
-      .getResponse();
-  },
+    if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
+      const speakOutput = 'NHS suggests that mindfulness can help us enjoy life more and understand ourselves better. Yoga can help with developing awareness of your breathing. If possible, you might want to hit the mat and give Yoga a try. I have a video where you can learn what to do. Would you like to watch it?';
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'yoga_question');
+  
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .addDirective({
+            type: 'Alexa.Presentation.APL.RenderDocument',
+            version: '1.0',
+            document: neither,
+            datasources: neither_data
+          })
+        .getResponse();
+    }else{
+      const speakOutput = 'NHS suggests that mindfulness can help us enjoy life more and understand ourselves better. Yoga can help with developing awareness of your breathing. If possible, you might want to hit the mat and give Yoga a try. I have a video where you can learn what to do. Would you like to watch it?';
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'yoga_question');
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .getResponse();
+    }
+  }
 };
 
 const PlayVideoButtonIntent = {
@@ -332,6 +396,7 @@ const PlayVideoIntentHandler = {
         && handlerInput.requestEnvelope.request.intent.name === 'PlayVideoIntent';
   },
   handle(handlerInput) {
+    setQuestion(handlerInput, null);
     if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
       handlerInput.responseBuilder.addDirective({
           type: 'Alexa.Presentation.APL.RenderDocument',
@@ -346,7 +411,8 @@ const PlayVideoIntentHandler = {
       let repromptText = 'This video will only play on a device with a screen, such as an Echo Show or Fire TV. If you would like some other suggestions, please say \"other suggestions\".';
       return handlerInput.responseBuilder
         .speak(speakOutput)
-        .reprompt(repromptText);
+        .reprompt(repromptText)
+        .getResponse();
     }
   }
 };
@@ -358,7 +424,6 @@ const Yoga_question = {
         && handlerInput.attributesManager.getSessionAttributes().questionAsked === 'yoga_question';
   },
   handle(handlerInput) {
-    setQuestion(handlerInput, null);
     if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
       handlerInput.responseBuilder.addDirective({
           type: 'Alexa.Presentation.APL.RenderDocument',
@@ -366,14 +431,17 @@ const Yoga_question = {
           document: video,
           datasources: video_data
       });
+      setQuestion(handlerInput, null);
       return handlerInput.responseBuilder
         .getResponse();
     }else{
-      let speakOutput = 'This video will only play on a device with a screen, such as an Echo Show or Fire TV. Would you like some other suggestions for your happiness?';
-      let repromptText = 'This video will only play on a device with a screen, such as an Echo Show or Fire TV. Would you like some other suggestions for your happiness?';
+      let speakOutput = 'This video will only play on a device with a screen, such as an Echo Show or Fire TV. If you would like some other suggestions, please say \"other suggestions\".';
+      let repromptText = 'This video will only play on a device with a screen, such as an Echo Show or Fire TV. If you would like some other suggestions, please say \"other suggestions\".';
+      setQuestion(handlerInput, null);
       return handlerInput.responseBuilder
         .speak(speakOutput)
-        .reprompt(repromptText);
+        .reprompt(repromptText)
+        .getResponse();
     }
   }
 };
@@ -415,22 +483,33 @@ const suggestion_question = {
         && handlerInput.attributesManager.getSessionAttributes().questionAsked === 'suggestion_question';
   },
   handle(handlerInput) {
-    const speakOutput = randomChoice(tipNum);
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.lastResult = speakOutput;
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-    setQuestion(handlerInput, 'suggestion_question');
-
-    return handlerInput.responseBuilder
-      .speak(speakOutput)
-      .reprompt(speakOutput)
-      .addDirective({
-        type: 'Alexa.Presentation.APL.RenderDocument',
-        version: '1.0',
-        document: anothersug,
-        datasources: anothersug_data
-      })
-      .getResponse();
+    if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
+      const speakOutput = randomChoice(tipNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'suggestion_question');
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: anothersug,
+          datasources: anothersug_data
+        })
+        .getResponse();
+    }else{
+      const speakOutput = randomChoice(tipNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'suggestion_question');
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .getResponse();
+    }
   }
 };
 
@@ -440,23 +519,35 @@ const OthersugHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'othersugIntent';
   },
   handle(handlerInput) {
-    const speakOutput = randomChoice(tipNum);
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.lastResult = speakOutput;
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-    setQuestion(handlerInput, 'suggestion_question');
-
-    return handlerInput.responseBuilder
-      .speak(speakOutput)
-      .reprompt(speakOutput)
-      .addDirective({
-        type: 'Alexa.Presentation.APL.RenderDocument',
-        version: '1.0',
-        document: anothersug,
-        datasources: anothersug_data
-      })
-      .getResponse();
-  },
+    if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
+      const speakOutput = randomChoice(tipNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'suggestion_question');
+  
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: anothersug,
+          datasources: anothersug_data
+        })
+        .getResponse();
+    }else{
+      const speakOutput = randomChoice(tipNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      setQuestion(handlerInput, 'suggestion_question');
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .getResponse();
+    }
+  }
 };
 
 const VideoEndedIntent = {
@@ -480,22 +571,34 @@ const UnhappyHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'UnhappyIntent';
   },
   handle(handlerInput) {
-    const speakOutput = 'NHS suggest that connecting with other people is the first step to improve your wellbeing. Talking things through helps you to release tension, rather than keeping it inside. If possible, make a phone call with friends you have not talked to for a while. Would you like to learn how to call a friend or family member?';
-    setQuestion(handlerInput, 'callfriend');
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    attributes.lastResult = speakOutput;
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-    return handlerInput.responseBuilder
-      .speak(speakOutput)
-      .reprompt(speakOutput)
-      .addDirective({
-          type: 'Alexa.Presentation.APL.RenderDocument',
-          version: '1.0',
-          document: unhappy,
-          datasources: unhappy_data
-        })
-      .getResponse();
-  },
+    if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
+      const speakOutput = 'NHS suggest that connecting with other people is the first step to improve your wellbeing. Talking things through helps you to release tension, rather than keeping it inside. If possible, make a phone call with friends you have not talked to for a while. Would you like to learn how to call a friend or family member?';
+      setQuestion(handlerInput, 'callfriend');
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .addDirective({
+            type: 'Alexa.Presentation.APL.RenderDocument',
+            version: '1.0',
+            document: unhappy,
+            datasources: unhappy_data
+          })
+        .getResponse();
+    }else{
+      const speakOutput = 'NHS suggest that connecting with other people is the first step to improve your wellbeing. Talking things through helps you to release tension, rather than keeping it inside. If possible, make a phone call with friends you have not talked to for a while. Would you like to learn how to call a friend or family member?';
+      setQuestion(handlerInput, 'callfriend');
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .getResponse();
+    }
+  }
 };
 
 const Connect_people = {
@@ -503,7 +606,7 @@ const Connect_people = {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
       && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent'
         && handlerInput.attributesManager.getSessionAttributes().questionAsked === 'callfriend';
-},
+  },
   handle(handlerInput) {
     setQuestion(handlerInput, null);
     const speakOutput = 'You can exit the skill first by saying \"Alexa, stop\".  Then say to me \"Alexa, make a phone call\". Would you like to hear another NHS happiness tip?';
@@ -555,23 +658,36 @@ const trysomethingHandler = {
         && handlerInput.attributesManager.getSessionAttributes().questionAsked === 'try_something_question';
   },
   handle(handlerInput) {
-    const speakOutput = randomChoice(methodsNum);
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
-    setQuestion(handlerInput, 'try_something_question');
-    attributes.lastResult = speakOutput;
-    handlerInput.attributesManager.setSessionAttributes(attributes);
-
-    return handlerInput.responseBuilder
-      .speak(speakOutput)
-      .reprompt(speakOutput)
-      .addDirective({
-        type: 'Alexa.Presentation.APL.RenderDocument',
-        version: '1.0',
-        document: trySomething,
-        datasources: trySomething_data
-      })
-      .getResponse();
-  },
+    if (Alexa.getSupportedInterfaces(handlerInput.requestEnvelope)['Alexa.Presentation.APL']){
+      const speakOutput = randomChoice(methodsNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      setQuestion(handlerInput, 'try_something_question');
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+  
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: trySomething,
+          datasources: trySomething_data
+        })
+        .getResponse();
+    }else{
+      const speakOutput = randomChoice(methodsNum);
+      const attributes = handlerInput.attributesManager.getSessionAttributes();
+      setQuestion(handlerInput, 'try_something_question');
+      attributes.lastResult = speakOutput;
+      handlerInput.attributesManager.setSessionAttributes(attributes);
+  
+      return handlerInput.responseBuilder
+        .speak(speakOutput)
+        .reprompt(speakOutput)
+        .getResponse();
+    }
+  }
 };
 
 const HelpHandler = {
@@ -581,7 +697,6 @@ const HelpHandler = {
   },
   handle(handlerInput) {
     const speakOutput = 'To provide feedback for your happiness, please tell me how happy are you feeling? Give a scale of one to three where one means unhappy and three means happy.';
-
     return handlerInput.responseBuilder
       .speak(speakOutput)
       .reprompt(speakOutput)
@@ -669,28 +784,28 @@ function randomChoice(myArray) {
   return(myArray[i]);
 }
       
-function slotValue(slot, useId){
-  if(slot.value == undefined){
-      return "undefined";
-  }
-  let value = slot.value;
-  let resolution = (slot.resolutions && slot.resolutions.resolutionsPerAuthority && slot.resolutions.resolutionsPerAuthority.length > 0) ? slot.resolutions.resolutionsPerAuthority[0] : null;
-  if(resolution && resolution.status.code == 'ER_SUCCESS_MATCH'){
-      let resolutionValue = resolution.values[0].value;
-      value = resolutionValue.id && useId ? resolutionValue.id : resolutionValue.name;
-  }
-  return value;
-}
+// function slotValue(slot, useId){
+//   if(slot.value == undefined){
+//       return "undefined";
+//   }
+//   let value = slot.value;
+//   let resolution = (slot.resolutions && slot.resolutions.resolutionsPerAuthority && slot.resolutions.resolutionsPerAuthority.length > 0) ? slot.resolutions.resolutionsPerAuthority[0] : null;
+//   if(resolution && resolution.status.code == 'ER_SUCCESS_MATCH'){
+//       let resolutionValue = resolution.values[0].value;
+//       value = resolutionValue.id && useId ? resolutionValue.id : resolutionValue.name;
+//   }
+//   return value;
+// }
 
-function hasDisplay(requestEnvelope) {
-    var hasDisplay = requestEnvelope.context &&
-        requestEnvelope.context.System &&
-        requestEnvelope.context.System.device &&
-        requestEnvelope.context.System.device.supportedInterfaces &&
-        requestEnvelope.context.System.device.supportedInterfaces.Display;
+// function hasDisplay(requestEnvelope) {
+//     var hasDisplay = requestEnvelope.context &&
+//         requestEnvelope.context.System &&
+//         requestEnvelope.context.System.device &&
+//         requestEnvelope.context.System.device.supportedInterfaces &&
+//         requestEnvelope.context.System.device.supportedInterfaces.Display;
 
-    return hasDisplay;
-}
+//     return hasDisplay;
+// }
 
 function setQuestion(handlerInput, questionAsked) {
   const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
@@ -705,6 +820,7 @@ exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
     HappyButtonIntent,
+    happy_tip_Handler,
     happy_tip_yes,
     happy_tip_no,
     NeitherButtonIntent,
@@ -712,8 +828,7 @@ exports.handler = skillBuilder
     goBackIntent,
     HappyHandler,
     BackToHappyIntent,
-    InProgresshappierIntentHandler,
-    // happierIntentHandler,
+    // InProgresshappierIntentHandler,
     NeitherHandler,
     PlayVideoButtonIntent,
     OtherSuggestionButtonButtonIntent,
